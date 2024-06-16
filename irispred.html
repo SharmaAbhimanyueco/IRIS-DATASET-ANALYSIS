@@ -1,0 +1,97 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS DATA PREDICTION APPLICATION</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, p {
+            text-align: center;
+        }
+        input[type="text"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 200px;
+        }
+        input[type="submit"] {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #resultThingy {
+            margin-top: 20px;
+            text-shadow: saddlebrown;
+            font-size: x-large;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>PREDICT THE SPECIES OF YOUR LEAF!</h1>
+
+    <div id="formContainer">
+        <p>
+            Enter SEPAL LENGTH: <input type="text" id="splen"> <br>
+            Enter SEPAL WIDTH:  <input type="text" id="spwid"> <br>
+            Enter PETAL LENGTH: <input type="text" id="ptlen"> <br>
+            Enter PETAL WIDTH:  <input type="text" id="ptwid"> <br>
+            <input type="submit" value="Submit Data" id="submitButton"> <br>
+
+            </p><div id="resultThingy">Predicted Iris Species: Please use the Interface</div>
+        <p></p>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            console.log("Hello All! Website is Loaded!");
+
+            $("#submitButton").click(function(){
+                var splen = $("#splen").val();
+                var spwid = $("#spwid").val();
+                var ptlen = $("#ptlen").val();
+                var ptwid = $("#ptwid").val();
+
+                console.log("VALUES ARE: ", splen, spwid, ptlen, ptwid);
+
+                var settings = {
+                    "url": "http://10.21.103.200:5500/irispred",
+                    "method": "POST",
+                    "timeout": 0,
+                    "headers": {
+                        "Content-Type": "application/json"
+                    },
+                    "data": JSON.stringify({
+                        "sepal_length": splen,
+                        "sepal_width": spwid,
+                        "petal_length": ptlen,
+                        "petal_width": ptwid
+                    }),
+                };
+
+                $.ajax(settings)
+                .done(function (response) {
+                    console.log(response);
+                    $("#resultThingy").html("Predicted Iris Species: " + response);
+                })
+                .fail(function(xhr, status, error) {
+                    var errorMessage = xhr.responseText;
+                    $("#resultThingy").html("<span class='error'>Error: " + errorMessage + "</span>");
+                });
+            });
+        });
+    </script>
+
+
+</body></html>
